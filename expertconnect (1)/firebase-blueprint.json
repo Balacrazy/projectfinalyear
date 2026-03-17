@@ -1,0 +1,108 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "Stores user and expert profile information.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "role": { "type": "string", "enum": ["user", "expert", "admin"] },
+        "skills": { "type": "array", "items": { "type": "string" } },
+        "bio": { "type": "string" },
+        "rating": { "type": "number" },
+        "totalRatings": { "type": "number" },
+        "notSatisfiedCount": { "type": "number" },
+        "reportCount": { "type": "number" },
+        "isBanned": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Request": {
+      "title": "Help Request",
+      "description": "A request for assistance posted by a user.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "accepted", "completed", "auto_responded"] },
+        "expertId": { "type": "string" },
+        "expertName": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "expiresAt": { "type": "string", "format": "date-time" },
+        "autoResponse": { "type": "object" }
+      },
+      "required": ["userId", "title", "description", "status", "createdAt"]
+    },
+    "Session": {
+      "title": "Active Session",
+      "description": "A real-time session between a user and an expert.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "requestId": { "type": "string" },
+        "userId": { "type": "string" },
+        "expertId": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "ended"] },
+        "startTime": { "type": "string", "format": "date-time" },
+        "endTime": { "type": "string", "format": "date-time" }
+      },
+      "required": ["requestId", "userId", "expertId", "status"]
+    },
+    "Message": {
+      "title": "Chat Message",
+      "description": "A message within a session.",
+      "type": "object",
+      "properties": {
+        "sessionId": { "type": "string" },
+        "senderId": { "type": "string" },
+        "text": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["sessionId", "senderId", "text", "timestamp"]
+    },
+    "Feedback": {
+      "title": "User Feedback",
+      "description": "Feedback provided by a user after a session.",
+      "type": "object",
+      "properties": {
+        "sessionId": { "type": "string" },
+        "userId": { "type": "string" },
+        "expertId": { "type": "string" },
+        "rating": { "type": "number" },
+        "comment": { "type": "string" },
+        "notSatisfied": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["sessionId", "userId", "expertId", "rating"]
+    },
+    "Report": {
+      "title": "User Report",
+      "description": "A report filed against a user for misbehavior.",
+      "type": "object",
+      "properties": {
+        "reporterId": { "type": "string" },
+        "reportedId": { "type": "string" },
+        "sessionId": { "type": "string" },
+        "reason": { "type": "string" },
+        "proof": { "type": "string", "description": "Textual proof or chat snippet" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["reporterId", "reportedId", "reason", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": { "schema": "User", "description": "User profiles" },
+    "/requests/{requestId}": { "schema": "Request", "description": "Help requests" },
+    "/sessions/{sessionId}": { "schema": "Session", "description": "Active sessions" },
+    "/sessions/{sessionId}/messages/{messageId}": { "schema": "Message", "description": "Session chat messages" },
+    "/feedback/{feedbackId}": { "schema": "Feedback", "description": "User feedback" },
+    "/reports/{reportId}": { "schema": "Report", "description": "User reports" }
+  }
+}

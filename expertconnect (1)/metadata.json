@@ -1,0 +1,5 @@
+{
+  "name": "ExpertConnect",
+  "description": "A professional expert assistance platform with real-time sessions and AI-powered auto-responses.",
+  "requestFramePermissions": ["camera", "microphone", "geolocation"]
+}
